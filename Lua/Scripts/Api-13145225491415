@@ -1,1 +1,23 @@
+local Api = {}
 
+local TextChatService = game:GetService("TextChatService")
+
+function Chat(message)
+    if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+        local textChannel = TextChatService.TextChannels.RBXGeneral
+        textChannel:SendAsync(message)
+    else
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(message, "All")
+    end
+end
+
+function Api:CreateFunc(command)
+    local cmd = command.Name:lower()
+    if cmd == "tp" or cmd == "teleport" then
+        queue_on_teleport(command.Code)
+    elseif cmd == "say" or cmd == "chat" then
+        Chat(command.Msg)
+    end
+end
+
+return Api
