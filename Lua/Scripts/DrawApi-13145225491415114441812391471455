@@ -35,10 +35,10 @@ function DrawApi:DrawLine(Options)
         obj._borders[i].ZIndex = -9e9
     end
     local offsets = {
-        Vector2.new(1, 0),
-        Vector2.new(-1, 0),
-        Vector2.new(0, 1),
-        Vector2.new(0, -1)
+        Vector2.new(-1, 0), -- left
+        Vector2.new(1, 0),  -- right
+        Vector2.new(0, -1), -- top
+        Vector2.new(0, 1)   -- bottom
     }
     local function apply(a, b)
         obj._main.From = a
