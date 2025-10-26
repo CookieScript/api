@@ -25,6 +25,7 @@ function DrawApi:DrawLine(Options)
     obj._main.Thickness = thickness
     obj._main.Transparency = transparency
     obj._main.Visible = visible
+    obj._main.ZIndex = -5
     obj._borders = newLineObjects(4, "Line")
     for i = 1, 4 do
         obj._borders[i].Color = borderColor
