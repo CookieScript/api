@@ -31,6 +31,7 @@ function DrawApi:DrawLine(Options)
         obj._borders[i].Thickness = math.max(1, math.floor(borderThickness))
         obj._borders[i].Transparency = transparency
         obj._borders[i].Visible = visible
+        obj._borders[i].ZIndex = -9e9
     end
     local offsets = {
         Vector2.new(1, 0),
