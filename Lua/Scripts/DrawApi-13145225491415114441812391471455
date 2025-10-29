@@ -1,14 +1,14 @@
 local DrawingApi = {}
 
-local gui = Instance.new("ScreenGui")
-gui.Parent = game.CoreGui
-gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+local DrawingApiGUi = Instance.new("ScreenGui")
+DrawingApiGUi.Parent = game.CoreGui
+DrawingApiGUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 function DrawingApi:Create(type)
     local obj = {}
     if type == "Line" then
         local frame = Instance.new("Frame")
-        frame.Parent = gui
+        frame.Parent = DrawingApiGUi
         frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
         frame.BorderColor3 = Color3.fromRGB(0,0,0)
         frame.BorderSizePixel = 1
