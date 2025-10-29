@@ -1,89 +1,61 @@
-local DrawApi = {}
+local DrawingApi = {}
 
-local function newLineObjects(count, class)
-    local t = {}
-    for i = 1, count do
-        t[i] = Drawing.new(class)
-    end
-    return t
-end
+local gui = Instance.new("ScreenGui")
+gui.Parent = game.CoreGui
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-function DrawApi:DrawLine(Options)
-    Options = Options or {}
-    local color = Options.Color or Color3.new(1, 1, 1)
-    local borderColor = Options.BorderColor or Color3.new(0, 0, 0)
-    local thickness = Options.Thickness or 1
-    local borderThickness = Options.BorderThickness or 2
-    local visible = Options.Visible == nil and true or Options.Visible
-    local transparency = Options.Transparency or 1
-
+function DrawingApi:Create(type)
     local obj = {}
-    obj._from = Vector2.new(0, 0)
-    obj._to = Vector2.new(0, 0)
-    obj._main = Drawing.new("Line")
-    obj._main.Color = color
-    obj._main.Thickness = thickness
-    obj._main.Transparency = transparency
-    obj._main.Visible = visible
-    obj._main.ZIndex = -5
-    obj._borders = newLineObjects(4, "Line")
-    for i = 1, 4 do
-        obj._borders[i].Color = borderColor
-        obj._borders[i].Thickness = math.max(1, math.floor(borderThickness))
-        obj._borders[i].Transparency = transparency
-        obj._borders[i].Visible = visible
-        obj._borders[i].ZIndex = -9e9
-    end
-    local offsets = {
-        Vector2.new(-1, 0), -- left
-        Vector2.new(1, 0),  -- right
-        Vector2.new(0, -1.5), -- top
-        Vector2.new(0, 1.5)   -- bottom
-    }
-    local function apply(a, b)
-        obj._main.From = a
-        obj._main.To = b
-        for i = 1, 4 do
-            local off = offsets[i] * ((borderThickness > 0) and (borderThickness * 0.6) or 1)
-            obj._borders[i].From = a + off
-            obj._borders[i].To = b + off
+    if type == "Line" then
+        local frame = Instance.new("Frame")
+        frame.Parent = gui
+        frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
+        frame.BorderColor3 = Color3.fromRGB(0,0,0)
+        frame.BorderSizePixel = 1
+        frame.Size = UDim2.new(0,1,0,1)
+        frame.Position = UDim2.new(0,0,0,0)
+        frame.AnchorPoint = Vector2.new(0,0)
+        frame.ZIndex = 5
+
+        function obj:From(x,y)
+            self._fromX = x
+            self._fromY = y
+            if self._toX and self._toY then
+                local dx = self._toX - x
+                local dy = self._toY - y
+                frame.Size = UDim2.new(0, math.sqrt(dx*dx + dy*dy), 0, 1)
+                frame.Position = UDim2.new(0,x,0,y)
+                frame.Rotation = math.deg(math.atan2(dy,dx))
+            end
+            return self
         end
+
+        function obj:To(x,y)
+            self._toX = x
+            self._toY = y
+            if self._fromX and self._fromY then
+                local dx = x - self._fromX
+                local dy = y - self._fromY
+                frame.Size = UDim2.new(0, math.sqrt(dx*dx + dy*dy), 0, 1)
+                frame.Position = UDim2.new(0,self._fromX,0,self._fromY)
+                frame.Rotation = math.deg(math.atan2(dy,dx))
+            end
+            return self
+        end
+
+        function obj:Color(color)
+            frame.BackgroundColor3 = color
+            return self
+        end
+
+        function obj:ZIndex(z)
+            frame.ZIndex = z
+            return self
+        end
+
+        obj.Instance = frame
     end
-    function obj:From(vec)
-        self._from = vec
-        apply(self._from, self._to)
-        return self
-    end
-    function obj:To(vec)
-        self._to = vec
-        apply(self._from, self._to)
-        return self
-    end
-    function obj:SetVisible(v)
-        obj._main.Visible = v
-        for i = 1, 4 do obj._borders[i].Visible = v end
-        return self
-    end
-    function obj:SetColor(c)
-        obj._main.Color = c
-        return self
-    end
-    function obj:SetBorderColor(c)
-        for i = 1, 4 do obj._borders[i].Color = c end
-        return self
-    end
-    function obj:SetTransparency(t)
-        obj._main.Transparency = t
-        for i = 1, 4 do obj._borders[i].Transparency = t end
-        return self
-    end
-    function obj:Remove()
-        obj._main.Visible = false
-        for i = 1, 4 do obj._borders[i].Visible = false end
-        return nil
-    end
-    apply(obj._from, obj._to)
     return obj
 end
 
-return DrawApi
+return DrawingApi
