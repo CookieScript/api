@@ -3,6 +3,7 @@ local DrawingApi = {}
 local DrawingApiGUi = Instance.new("ScreenGui")
 DrawingApiGUi.Parent = game.CoreGui
 DrawingApiGUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+DrawingApiGUI.IgnoreGuiInset = true
 
 function DrawingApi:Create(type)
     local obj = {}
