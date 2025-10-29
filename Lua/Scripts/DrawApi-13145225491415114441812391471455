@@ -53,6 +53,11 @@ function DrawingApi:Create(type)
             return self
         end
 
+        function obj:SetVisibility(bool)
+            frame.Visible = bool
+            return self
+        end
+
         obj.Instance = frame
     end
     return obj
