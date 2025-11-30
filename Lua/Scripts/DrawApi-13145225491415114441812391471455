@@ -1,67 +1,73 @@
-local DrawingApi = {}
+local DrawApi = {}
 
-local DrawingApiGUi = Instance.new("ScreenGui")
-DrawingApiGUi.Parent = game.CoreGui
-DrawingApiGUi.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-DrawingApiGUi.IgnoreGuiInset = true
+function DrawApi:DrawLine(from, to, mainColor, transparency)
+    local offsets = {
+        Vector2.new(0, 0),
+        Vector2.new(1, 0),
+        Vector2.new(-1, 0),
+        Vector2.new(0, 1),
+        Vector2.new(0, -1),
+    }
 
-function DrawingApi:Create(type)
-    local obj = {}
-    if type == "Line" then
-        local frame = Instance.new("Frame")
-        frame.Parent = DrawingApiGUi
-        frame.BackgroundColor3 = Color3.fromRGB(255,255,255)
-        frame.BorderColor3 = Color3.fromRGB(0,0,0)
-        frame.BorderSizePixel = 1
-        frame.Size = UDim2.new(0,1,0,1)
-        frame.Position = UDim2.new(0,0,0,0)
-        frame.AnchorPoint = Vector2.new(0,0)
-        frame.ZIndex = 5
-
-        function obj:From(x,y)
-            self._fromX = x
-            self._fromY = y
-            if self._toX and self._toY then
-                local dx = self._toX - x
-                local dy = self._toY - y
-                frame.Size = UDim2.new(0, math.sqrt(dx*dx + dy*dy), 0, 1)
-                frame.Position = UDim2.new(0,x,0,y)
-                frame.Rotation = math.deg(math.atan2(dy,dx))
-            end
-            return self
-        end
-
-        function obj:To(x,y)
-            self._toX = x
-            self._toY = y
-            if self._fromX and self._fromY then
-                local dx = x - self._fromX
-                local dy = y - self._fromY
-                frame.Size = UDim2.new(0, math.sqrt(dx*dx + dy*dy), 0, 1)
-                frame.Position = UDim2.new(0,self._fromX,0,self._fromY)
-                frame.Rotation = math.deg(math.atan2(dy,dx))
-            end
-            return self
-        end
-
-        function obj:Color(color)
-            frame.BackgroundColor3 = color
-            return self
-        end
-
-        function obj:ZIndex(z)
-            frame.ZIndex = z
-            return self
-        end
-
-        function obj:SetVisibility(bool)
-            frame.Visible = bool
-            return self
-        end
-
-        obj.Instance = frame
+    local borderLines = {}
+    for _, offset in pairs(offsets) do
+        local bLine = Drawing.new("Line")
+        bLine.From = from + offset
+        bLine.To = to + offset
+        bLine.Color = Color3.new(0, 0, 0)
+        bLine.ZIndex = 0
+        bLine.Transparency = transparency or 1
+        bLine.Visible = true
+        table.insert(borderLines, bLine)
     end
-    return obj
+
+    local mainLine = Drawing.new("Line")
+    mainLine.From = from
+    mainLine.To = to
+    mainLine.Color = mainColor
+    mainLine.Transparency = transparency or 1
+    mainLine.Visible = true
+
+    local lineObject = {
+        Main = mainLine,
+        Borders = borderLines,
+
+        Move = function(self, newFrom, newTo)
+            self.Main.From = newFrom
+            self.Main.To = newTo
+            for i, bLine in ipairs(self.Borders) do
+                bLine.From = newFrom + offsets[i]
+                bLine.To = newTo + offsets[i]
+            end
+        end,
+
+        UpdateProperties = function(self, props)
+            if props.Color then
+                self.Main.Color = props.Color
+            end
+            if props.Transparency then
+                self.Main.Transparency = props.Transparency
+                for _, bLine in ipairs(self.Borders) do
+                    bLine.Transparency = props.Transparency
+                end
+            end
+            if props.Visible ~= nil then
+                self.Main.Visible = props.Visible
+                for _, bLine in ipairs(self.Borders) do
+                    bLine.Visible = props.Visible
+                end
+            end
+        end,
+
+        DeleteLine = function(self)
+            self.Main:Remove()
+            for _, bLine in ipairs(self.Borders) do
+                bLine:Remove()
+            end
+        end
+    }
+
+    return lineObject
 end
 
-return DrawingApi
+return DrawApi
