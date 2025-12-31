@@ -70,4 +70,132 @@ function DrawApi:DrawLine(from, to, mainColor, transparency)
     return lineObject
 end
 
+function DrawApi:DrawCircle(properties)
+    local ApiGui = Instance.new("ScreenGui")
+    ApiGui.Parent = game:GetService("CoreGui")
+    ApiGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    local CircleDrawing = {
+        pos = properties.Pos or Vector2.new(0, 0),
+        radius = properties.Radius or 50,
+        color = properties.Color or Color3.fromRGB(255, 255, 255),
+        border = properties.Border or false,
+        zindex = properties.ZIndex,
+    }
+
+    local size = CircleDrawing.radius * 2
+
+    local DrawingCircle = {}
+
+    local function createCircleFrame(option)
+        local frame = Instance.new("Frame")
+        frame.BackgroundTransparency = 1
+        frame.BorderSizePixel = 0
+        frame.AnchorPoint = Vector2.new(0.5, 0.5)
+        frame.Size = UDim2.fromOffset(
+            size + (option.ExtraPixels or 0),
+            size + (option.ExtraPixels or 0)
+        )
+        frame.Position = UDim2.fromOffset(
+            CircleDrawing.pos.X,
+            CircleDrawing.pos.Y
+        )
+        frame.Parent = ApiGui
+
+        if CircleDrawing.zindex ~= nil then
+            frame.ZIndex = CircleDrawing.zindex
+        end
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(1, 0)
+        corner.Parent = frame
+
+        local stroke = Instance.new("UIStroke")
+        stroke.Thickness = 1
+        stroke.Color = option.StrokeColor
+        stroke.Parent = frame
+
+        return frame, stroke
+    end
+
+    local borderFrame, borderStroke
+    if CircleDrawing.border then
+        borderFrame, borderStroke = createCircleFrame({
+            ExtraPixels = 1,
+            StrokeColor = Color3.fromRGB(0, 0, 0)
+        })
+    end
+
+    local mainFrame, mainStroke = createCircleFrame({
+        ExtraPixels = 0,
+        StrokeColor = CircleDrawing.color
+    })
+
+    DrawingCircle.MainFrame = mainFrame
+    DrawingCircle.MainStroke = mainStroke
+    DrawingCircle.BorderFrame = borderFrame
+    DrawingCircle.BorderStroke = borderStroke
+    DrawingCircle.Properties = CircleDrawing
+
+    function DrawingCircle:UpdateProperties(properties)
+        if properties.Pos then
+            self.Properties.pos = properties.Pos
+            self.MainFrame.Position = UDim2.fromOffset(properties.Pos.X, properties.Pos.Y)
+            if self.BorderFrame then
+                self.BorderFrame.Position = UDim2.fromOffset(properties.Pos.X, properties.Pos.Y)
+            end
+        end
+        if properties.Radius then
+            self.Properties.radius = properties.Radius
+            local newSize = properties.Radius * 2
+            self.MainFrame.Size = UDim2.fromOffset(newSize, newSize)
+            if self.BorderFrame then
+                self.BorderFrame.Size = UDim2.fromOffset(newSize + 1, newSize + 1)
+            end
+        end
+        if properties.Color then
+            self.Properties.color = properties.Color
+            self.MainStroke.Color = properties.Color
+        end
+        if properties.Border ~= nil then
+            self.Properties.border = properties.Border
+            if properties.Border and not self.BorderFrame then
+                local bf, bs = createCircleFrame({
+                    ExtraPixels = 1,
+                    StrokeColor = Color3.fromRGB(0, 0, 0)
+                })
+                self.BorderFrame = bf
+                self.BorderStroke = bs
+            elseif not properties.Border and self.BorderFrame then
+                self.BorderFrame:Destroy()
+                self.BorderFrame = nil
+                self.BorderStroke = nil
+            end
+        end
+        if properties.ZIndex then
+            self.Properties.zindex = properties.ZIndex
+            self.MainFrame.ZIndex = properties.ZIndex
+            if self.BorderFrame then
+                self.BorderFrame.ZIndex = properties.ZIndex
+            end
+        end
+    end
+
+    function DrawingCircle:DeleteCircle()
+        if self.MainFrame then
+            self.MainFrame:Destroy()
+            self.MainFrame = nil
+        end
+        if self.BorderFrame then
+            self.BorderFrame:Destroy()
+            self.BorderFrame = nil
+        end
+        self.MainStroke = nil
+        self.BorderStroke = nil
+        self.Properties = nil
+    end
+
+    return DrawingCircle
+end
+
 return DrawApi
