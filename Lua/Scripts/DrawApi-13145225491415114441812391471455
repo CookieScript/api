@@ -1,73 +1,65 @@
 local DrawApi = {}
 
-function DrawApi:DrawLine(from, to, mainColor, transparency)
-    local offsets = {
-        Vector2.new(0, 0),
-        Vector2.new(1, 0),
-        Vector2.new(-1, 0),
-        Vector2.new(0, 1),
-        Vector2.new(0, -1),
+function DrawApi:DrawLine(from, to, mainColor, transparency, border)
+    local ApiGui = Instance.new("ScreenGui")
+    ApiGui.Parent = game:GetService("CoreGui")
+    ApiGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    local Line = {
+        From = from or Vector2.new(0, 0),
+        To = to or Vector2.new(0, 0),
+        Color = mainColor or Color3.fromRGB(255, 255, 255),
+        Transparency = transparency or 0,
+        Border = border or true,
+        Thickness = 1,
     }
 
-    local borderLines = {}
-    for _, offset in pairs(offsets) do
-        local bLine = Drawing.new("Line")
-        bLine.From = from + offset
-        bLine.To = to + offset
-        bLine.Color = Color3.new(0, 0, 0)
-        bLine.ZIndex = 0
-        bLine.Transparency = transparency or 1
-        bLine.Visible = true
-        table.insert(borderLines, bLine)
+    local frame = Instance.new("Frame")
+    frame.Parent = ApiGui
+
+    local delta = Line.To - Line.From
+    local length = delta.Magnitude
+    local angle = math.atan2(delta.Y, delta.X)
+    frame.Size = UDim2.fromOffset(length, Line.Thickness)
+    frame.Position = UDim2.fromOffset((Line.From.X + Line.To.X) / 2, (Line.From.Y + Line.To.Y) / 2)
+    frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    frame.Rotation = math.deg(angle)
+    frame.BackgroundColor3 = Line.Color
+    frame.BackgroundTransparency = Line.Transparency
+    frame.BorderSizePixel = Line.Border and 1 or 0
+    frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+
+    local DrawingLine = {}
+    DrawingLine.Frame = frame
+    DrawingLine.Line = Line
+
+    function DrawingLine:UpdateProperties(props)
+        if props.From then self.Line.From = props.From end
+        if props.To then self.Line.To = props.To end
+        if props.Color then self.Line.Color = props.Color end
+        if props.Transparency ~= nil then self.Line.Transparency = props.Transparency end
+        if props.Border ~= nil then self.Line.Border = props.Border end
+
+        local delta = self.Line.To - self.Line.From
+        local length = delta.Magnitude
+        local angle = math.atan2(delta.Y, delta.X)
+        self.Frame.Size = UDim2.fromOffset(length, self.Line.Thickness)
+        self.Frame.Position = UDim2.fromOffset((self.Line.From.X + self.Line.To.X) / 2, (self.Line.From.Y + self.Line.To.Y) / 2)
+        self.Frame.Rotation = math.deg(angle)
+        self.Frame.BackgroundColor3 = self.Line.Color
+        self.Frame.BackgroundTransparency = self.Line.Transparency
+        self.Frame.BorderSizePixel = self.Line.Border and 1 or 0
     end
 
-    local mainLine = Drawing.new("Line")
-    mainLine.From = from
-    mainLine.To = to
-    mainLine.Color = mainColor
-    mainLine.Transparency = transparency or 1
-    mainLine.Visible = true
-
-    local lineObject = {
-        Main = mainLine,
-        Borders = borderLines,
-
-        Move = function(self, newFrom, newTo)
-            self.Main.From = newFrom
-            self.Main.To = newTo
-            for i, bLine in ipairs(self.Borders) do
-                bLine.From = newFrom + offsets[i]
-                bLine.To = newTo + offsets[i]
-            end
-        end,
-
-        UpdateProperties = function(self, props)
-            if props.Color then
-                self.Main.Color = props.Color
-            end
-            if props.Transparency then
-                self.Main.Transparency = props.Transparency
-                for _, bLine in ipairs(self.Borders) do
-                    bLine.Transparency = props.Transparency
-                end
-            end
-            if props.Visible ~= nil then
-                self.Main.Visible = props.Visible
-                for _, bLine in ipairs(self.Borders) do
-                    bLine.Visible = props.Visible
-                end
-            end
-        end,
-
-        DeleteLine = function(self)
-            self.Main:Remove()
-            for _, bLine in ipairs(self.Borders) do
-                bLine:Remove()
-            end
+    function DrawingLine:DeleteLine()
+        if self.Frame then
+            self.Frame:Destroy()
+            self.Frame = nil
+            self.Line = nil
         end
-    }
+    end
 
-    return lineObject
+    return frame, DrawingLine
 end
 
 function DrawApi:DrawCircle(properties)
