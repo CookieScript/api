@@ -46,15 +46,16 @@ function DrawApi:DrawLine(from, to, mainColor, transparency, border)
     end
 
     function DrawingLine:UpdateProperties(props)
-        if props.Color then self.Line.Color = props.Color end
+       if props.Color then self.Line.Color = props.Color end
         if props.Transparency ~= nil then self.Line.Transparency = props.Transparency end
         if props.Border ~= nil then self.Line.Border = props.Border end
+        if props.Visible ~= nil then self.Frame.Visible = props.Visible end
 
         local delta = self.Line.To - self.Line.From
         local length = delta.Magnitude
         local angle = math.atan2(delta.Y, delta.X)
         self.Frame.Size = UDim2.fromOffset(length, self.Line.Thickness)
-        self.Frame.Position = UDim2.fromOffset((self.Line.From.X + self.Line.To.X) / 2, (self.Line.From.Y + self.Line.To.Y) / 2)
+        self.Frame.Position = UDim2.fromOffset((self.Line.From.X + self.Line.To.X)/2, (self.Line.From.Y + self.Line.To.Y)/2)
         self.Frame.Rotation = math.deg(angle)
         self.Frame.BackgroundColor3 = self.Line.Color
         self.Frame.BackgroundTransparency = self.Line.Transparency
