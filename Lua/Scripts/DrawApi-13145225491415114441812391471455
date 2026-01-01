@@ -70,7 +70,7 @@ function DrawApi:DrawLine(from, to, mainColor, transparency, border)
         end
     end
 
-    return frame, DrawingLine
+    return DrawingLine
 end
 
 function DrawApi:DrawCircle(properties)
