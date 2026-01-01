@@ -46,8 +46,6 @@ function DrawApi:DrawLine(from, to, mainColor, transparency, border)
     end
 
     function DrawingLine:UpdateProperties(props)
-        if props.From then self.Line.From = props.From end
-        if props.To then self.Line.To = props.To end
         if props.Color then self.Line.Color = props.Color end
         if props.Transparency ~= nil then self.Line.Transparency = props.Transparency end
         if props.Border ~= nil then self.Line.Border = props.Border end
