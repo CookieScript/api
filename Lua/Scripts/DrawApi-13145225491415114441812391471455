@@ -33,6 +33,18 @@ function DrawApi:DrawLine(from, to, mainColor, transparency, border)
     DrawingLine.Frame = frame
     DrawingLine.Line = Line
 
+    function DrawingLine:Move(newFrom, newTo)
+        self.Line.From = newFrom or self.Line.From
+        self.Line.To = newTo or self.Line.To
+
+        local delta = self.Line.To - self.Line.From
+        local length = delta.Magnitude
+        local angle = math.atan2(delta.Y, delta.X)
+        self.Frame.Size = UDim2.fromOffset(length, self.Line.Thickness)
+        self.Frame.Position = UDim2.fromOffset((self.Line.From.X + self.Line.To.X) / 2, (self.Line.From.Y + self.Line.To.Y) / 2)
+        self.Frame.Rotation = math.deg(angle)
+    end
+
     function DrawingLine:UpdateProperties(props)
         if props.From then self.Line.From = props.From end
         if props.To then self.Line.To = props.To end
