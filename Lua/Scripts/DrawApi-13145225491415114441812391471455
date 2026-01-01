@@ -28,6 +28,7 @@ function DrawApi:DrawLine(from, to, mainColor, transparency, border)
     frame.BackgroundTransparency = Line.Transparency
     frame.BorderSizePixel = Line.Border and 1 or 0
     frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    frame.Visible = true
 
     local DrawingLine = {}
     DrawingLine.Frame = frame
@@ -49,7 +50,7 @@ function DrawApi:DrawLine(from, to, mainColor, transparency, border)
        if props.Color then self.Line.Color = props.Color end
         if props.Transparency ~= nil then self.Line.Transparency = props.Transparency end
         if props.Border ~= nil then self.Line.Border = props.Border end
-        if props.Visible ~= nil then self.Frame.Visible = props.Visible end
+        if props.Visible == nil then self.Frame.Visible = true else self.Frame.Visible = props.Visible end
 
         local delta = self.Line.To - self.Line.From
         local length = delta.Magnitude
