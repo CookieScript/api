@@ -183,6 +183,12 @@ function DrawApi:DrawCircle(properties)
                 self.BorderFrame.ZIndex = properties.ZIndex
             end
         end
+        if properties.Visible ~= nil then
+            self.MainFrame.Visible = properties.Visible
+            if self.BorderFrame then
+                self.BorderFrame.Visible = properties.Visible
+            end
+        end
     end
 
     function DrawingCircle:DeleteCircle()
@@ -221,10 +227,7 @@ function DrawApi:DrawSquare(properties)
     local function createSquareFrame(option)
         local frame = Instance.new("Frame")
         frame.AnchorPoint = Vector2.new(0.5, 0.5)
-        frame.Position = UDim2.fromOffset(
-            SquareDrawing.pos.X,
-            SquareDrawing.pos.Y
-        )
+        frame.Position = UDim2.fromOffset(SquareDrawing.pos.X, SquareDrawing.pos.Y)
         frame.Size = UDim2.fromOffset(
             SquareDrawing.size.X + (option.ExtraPixels or 0),
             SquareDrawing.size.Y + (option.ExtraPixels or 0)
@@ -233,7 +236,7 @@ function DrawApi:DrawSquare(properties)
         frame.BorderSizePixel = 0
         frame.Parent = ApiGui
 
-        if SquareDrawing.zindex ~= nil then
+        if SquareDrawing.zindex then
             frame.ZIndex = SquareDrawing.zindex
         end
 
@@ -314,6 +317,12 @@ function DrawApi:DrawSquare(properties)
                 self.BorderFrame:Destroy()
                 self.BorderFrame = nil
                 self.BorderStroke = nil
+            end
+        end
+        if properties.Visible ~= nil then
+            self.MainFrame.Visible = properties.Visible
+            if self.BorderFrame then
+                self.BorderFrame.Visible = properties.Visible
             end
         end
         if properties.ZIndex then
