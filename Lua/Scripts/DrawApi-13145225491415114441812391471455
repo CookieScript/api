@@ -202,4 +202,144 @@ function DrawApi:DrawCircle(properties)
     return DrawingCircle
 end
 
+function DrawApi:DrawSquare(properties)
+    local ApiGui = Instance.new("ScreenGui")
+    ApiGui.Parent = game:GetService("CoreGui")
+    ApiGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+    local SquareDrawing = {
+        pos = properties.Pos or Vector2.new(0, 0),
+        size = properties.Size or Vector2.new(50, 50),
+        color = properties.Color or Color3.fromRGB(255, 255, 255),
+        transparency = properties.Transparency or 0,
+        border = properties.Border or false,
+        zindex = properties.ZIndex,
+    }
+
+    local DrawingSquare = {}
+
+    local function createSquareFrame(option)
+        local frame = Instance.new("Frame")
+        frame.AnchorPoint = Vector2.new(0.5, 0.5)
+        frame.Position = UDim2.fromOffset(
+            SquareDrawing.pos.X,
+            SquareDrawing.pos.Y
+        )
+        frame.Size = UDim2.fromOffset(
+            SquareDrawing.size.X + (option.ExtraPixels or 0),
+            SquareDrawing.size.Y + (option.ExtraPixels or 0)
+        )
+        frame.BackgroundTransparency = 1
+        frame.BorderSizePixel = 0
+        frame.Parent = ApiGui
+
+        if SquareDrawing.zindex ~= nil then
+            frame.ZIndex = SquareDrawing.zindex
+        end
+
+        local stroke
+        if option.StrokeColor then
+            stroke = Instance.new("UIStroke")
+            stroke.Thickness = 1
+            stroke.Color = option.StrokeColor
+            stroke.Transparency = option.Transparency or 0
+            stroke.Parent = frame
+        end
+
+        return frame, stroke
+    end
+
+    local borderFrame, borderStroke
+    if SquareDrawing.border then
+        borderFrame, borderStroke = createSquareFrame({
+            ExtraPixels = 1,
+            StrokeColor = Color3.fromRGB(0, 0, 0),
+            Transparency = SquareDrawing.transparency
+        })
+    end
+
+    local mainFrame, mainStroke = createSquareFrame({
+        ExtraPixels = 0,
+        StrokeColor = SquareDrawing.color,
+        Transparency = SquareDrawing.transparency
+    })
+
+    DrawingSquare.MainFrame = mainFrame
+    DrawingSquare.MainStroke = mainStroke
+    DrawingSquare.BorderFrame = borderFrame
+    DrawingSquare.BorderStroke = borderStroke
+    DrawingSquare.Properties = SquareDrawing
+
+    function DrawingSquare:UpdateProperties(properties)
+        if properties.Pos then
+            self.Properties.pos = properties.Pos
+            self.MainFrame.Position = UDim2.fromOffset(properties.Pos.X, properties.Pos.Y)
+            if self.BorderFrame then
+                self.BorderFrame.Position = self.MainFrame.Position
+            end
+        end
+        if properties.Size then
+            self.Properties.size = properties.Size
+            self.MainFrame.Size = UDim2.fromOffset(properties.Size.X, properties.Size.Y)
+            if self.BorderFrame then
+                self.BorderFrame.Size = UDim2.fromOffset(properties.Size.X + 1, properties.Size.Y + 1)
+            end
+        end
+        if properties.Color then
+            self.Properties.color = properties.Color
+            if self.MainStroke then
+                self.MainStroke.Color = properties.Color
+            end
+        end
+        if properties.Transparency ~= nil then
+            self.Properties.transparency = properties.Transparency
+            if self.MainStroke then
+                self.MainStroke.Transparency = properties.Transparency
+            end
+            if self.BorderStroke then
+                self.BorderStroke.Transparency = properties.Transparency
+            end
+        end
+        if properties.Border ~= nil then
+            self.Properties.border = properties.Border
+            if properties.Border and not self.BorderFrame then
+                local bf, bs = createSquareFrame({
+                    ExtraPixels = 1,
+                    StrokeColor = Color3.fromRGB(0, 0, 0),
+                    Transparency = self.Properties.transparency
+                })
+                self.BorderFrame = bf
+                self.BorderStroke = bs
+            elseif not properties.Border and self.BorderFrame then
+                self.BorderFrame:Destroy()
+                self.BorderFrame = nil
+                self.BorderStroke = nil
+            end
+        end
+        if properties.ZIndex then
+            self.Properties.zindex = properties.ZIndex
+            self.MainFrame.ZIndex = properties.ZIndex
+            if self.BorderFrame then
+                self.BorderFrame.ZIndex = properties.ZIndex
+            end
+        end
+    end
+
+    function DrawingSquare:DeleteSquare()
+        if self.MainFrame then
+            self.MainFrame:Destroy()
+            self.MainFrame = nil
+        end
+        if self.BorderFrame then
+            self.BorderFrame:Destroy()
+            self.BorderFrame = nil
+        end
+        self.MainStroke = nil
+        self.BorderStroke = nil
+        self.Properties = nil
+    end
+
+    return DrawingSquare
+end
+
 return DrawApi
