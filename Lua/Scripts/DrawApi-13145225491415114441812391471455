@@ -97,8 +97,8 @@ function DrawApi:DrawCircle(properties)
         frame.BorderSizePixel = 0
         frame.AnchorPoint = Vector2.new(0.5, 0.5)
         frame.Size = UDim2.fromOffset(
-            size + (option.ExtraPixels or 0),
-            size + (option.ExtraPixels or 0)
+            size + (option.ExtraPixels or 0) * 2,
+            size + (option.ExtraPixels or 0) * 2
         )
         frame.Position = UDim2.fromOffset(
             CircleDrawing.pos.X,
@@ -154,7 +154,7 @@ function DrawApi:DrawCircle(properties)
             local newSize = properties.Radius * 2
             self.MainFrame.Size = UDim2.fromOffset(newSize, newSize)
             if self.BorderFrame then
-                self.BorderFrame.Size = UDim2.fromOffset(newSize + 1, newSize + 1)
+                self.BorderFrame.Size = UDim2.fromOffset(newSize + 2, newSize + 2)
             end
         end
         if properties.Color then
