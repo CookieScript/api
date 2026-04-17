@@ -122,13 +122,12 @@ function DrawApi:DrawCircle(properties)
         return frame, stroke
     end
 
-    local borderFrame, borderStroke
+    local borderFrame, borderStroke, borderFrame2, borderStroke2
     if CircleDrawing.border then
         borderFrame, borderStroke = createCircleFrame({
             ExtraPixels = 1,
             StrokeColor = Color3.fromRGB(0, 0, 0)
         })
-        --
         borderFrame2, borderStroke2 = createCircleFrame({
             ExtraPixels = -1,
             StrokeColor = Color3.fromRGB(0, 0, 0)
@@ -155,6 +154,9 @@ function DrawApi:DrawCircle(properties)
             if self.BorderFrame then
                 self.BorderFrame.Position = UDim2.fromOffset(properties.Pos.X, properties.Pos.Y)
             end
+            if self.BorderFrame2 then
+                self.BorderFrame2.Position = UDim2.fromOffset(properties.Pos.X, properties.Pos.Y)
+            end
         end
         if properties.Radius then
             self.Properties.radius = properties.Radius
@@ -162,6 +164,9 @@ function DrawApi:DrawCircle(properties)
             self.MainFrame.Size = UDim2.fromOffset(newSize, newSize)
             if self.BorderFrame then
                 self.BorderFrame.Size = UDim2.fromOffset(newSize + 2, newSize + 2)
+            end
+            if self.BorderFrame2 then
+                self.BorderFrame2.Size = UDim2.fromOffset(newSize - 2, newSize - 2)
             end
         end
         if properties.Color then
@@ -175,12 +180,23 @@ function DrawApi:DrawCircle(properties)
                     ExtraPixels = 1,
                     StrokeColor = Color3.fromRGB(0, 0, 0)
                 })
+                local bf2, bs2 = createCircleFrame({
+                    ExtraPixels = -1,
+                    StrokeColor = Color3.fromRGB(0, 0, 0)
+                })
                 self.BorderFrame = bf
                 self.BorderStroke = bs
+                self.BorderFrame2 = bf2
+                self.BorderStroke2 = bs2
             elseif not properties.Border and self.BorderFrame then
                 self.BorderFrame:Destroy()
                 self.BorderFrame = nil
                 self.BorderStroke = nil
+                if self.BorderFrame2 then
+                    self.BorderFrame2:Destroy()
+                    self.BorderFrame2 = nil
+                    self.BorderStroke2 = nil
+                end
             end
         end
         if properties.ZIndex then
@@ -189,11 +205,17 @@ function DrawApi:DrawCircle(properties)
             if self.BorderFrame then
                 self.BorderFrame.ZIndex = properties.ZIndex
             end
+            if self.BorderFrame2 then
+                self.BorderFrame2.ZIndex = properties.ZIndex
+            end
         end
         if properties.Visible ~= nil then
             self.MainFrame.Visible = properties.Visible
             if self.BorderFrame then
                 self.BorderFrame.Visible = properties.Visible
+            end
+            if self.BorderFrame2 then
+                self.BorderFrame2.Visible = properties.Visible
             end
         end
     end
@@ -207,8 +229,13 @@ function DrawApi:DrawCircle(properties)
             self.BorderFrame:Destroy()
             self.BorderFrame = nil
         end
+        if self.BorderFrame2 then
+            self.BorderFrame2:Destroy()
+            self.BorderFrame2 = nil
+        end
         self.MainStroke = nil
         self.BorderStroke = nil
+        self.BorderStroke2 = nil
         self.Properties = nil
     end
 
@@ -259,14 +286,13 @@ function DrawApi:DrawSquare(properties)
         return frame, stroke
     end
 
-    local borderFrame, borderStroke
+    local borderFrame, borderStroke, borderFrame2, borderStroke2
     if SquareDrawing.border then
         borderFrame, borderStroke = createSquareFrame({
             ExtraPixels = 1,
             StrokeColor = Color3.fromRGB(0, 0, 0),
             Transparency = SquareDrawing.transparency
         })
-        --
         borderFrame2, borderStroke2 = createSquareFrame({
             ExtraPixels = -1,
             StrokeColor = Color3.fromRGB(0, 0, 0),
@@ -295,12 +321,18 @@ function DrawApi:DrawSquare(properties)
             if self.BorderFrame then
                 self.BorderFrame.Position = self.MainFrame.Position
             end
+            if self.BorderFrame2 then
+                self.BorderFrame2.Position = self.MainFrame.Position
+            end
         end
         if properties.Size then
             self.Properties.size = properties.Size
             self.MainFrame.Size = UDim2.fromOffset(properties.Size.X, properties.Size.Y)
             if self.BorderFrame then
                 self.BorderFrame.Size = UDim2.fromOffset(properties.Size.X + 1, properties.Size.Y + 1)
+            end
+            if self.BorderFrame2 then
+                self.BorderFrame2.Size = UDim2.fromOffset(properties.Size.X - 1, properties.Size.Y - 1)
             end
         end
         if properties.Color then
@@ -317,6 +349,9 @@ function DrawApi:DrawSquare(properties)
             if self.BorderStroke then
                 self.BorderStroke.Transparency = properties.Transparency
             end
+            if self.BorderStroke2 then
+                self.BorderStroke2.Transparency = properties.Transparency
+            end
         end
         if properties.Border ~= nil then
             self.Properties.border = properties.Border
@@ -326,12 +361,24 @@ function DrawApi:DrawSquare(properties)
                     StrokeColor = Color3.fromRGB(0, 0, 0),
                     Transparency = self.Properties.transparency
                 })
+                local bf2, bs2 = createSquareFrame({
+                    ExtraPixels = -1,
+                    StrokeColor = Color3.fromRGB(0, 0, 0),
+                    Transparency = self.Properties.transparency
+                })
                 self.BorderFrame = bf
                 self.BorderStroke = bs
+                self.BorderFrame2 = bf2
+                self.BorderStroke2 = bs2
             elseif not properties.Border and self.BorderFrame then
                 self.BorderFrame:Destroy()
                 self.BorderFrame = nil
                 self.BorderStroke = nil
+                if self.BorderFrame2 then
+                    self.BorderFrame2:Destroy()
+                    self.BorderFrame2 = nil
+                    self.BorderStroke2 = nil
+                end
             end
         end
         if properties.Visible ~= nil then
@@ -339,12 +386,18 @@ function DrawApi:DrawSquare(properties)
             if self.BorderFrame then
                 self.BorderFrame.Visible = properties.Visible
             end
+            if self.BorderFrame2 then
+                self.BorderFrame2.Visible = properties.Visible
+            end
         end
         if properties.ZIndex then
             self.Properties.zindex = properties.ZIndex
             self.MainFrame.ZIndex = properties.ZIndex
             if self.BorderFrame then
                 self.BorderFrame.ZIndex = properties.ZIndex
+            end
+            if self.BorderFrame2 then
+                self.BorderFrame2.ZIndex = properties.ZIndex
             end
         end
     end
@@ -358,8 +411,13 @@ function DrawApi:DrawSquare(properties)
             self.BorderFrame:Destroy()
             self.BorderFrame = nil
         end
+        if self.BorderFrame2 then
+            self.BorderFrame2:Destroy()
+            self.BorderFrame2 = nil
+        end
         self.MainStroke = nil
         self.BorderStroke = nil
+        self.BorderStroke2 = nil
         self.Properties = nil
     end
 
