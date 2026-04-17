@@ -128,6 +128,11 @@ function DrawApi:DrawCircle(properties)
             ExtraPixels = 1,
             StrokeColor = Color3.fromRGB(0, 0, 0)
         })
+        --
+        borderFrame2, borderStroke2 = createCircleFrame({
+            ExtraPixels = -1,
+            StrokeColor = Color3.fromRGB(0, 0, 0)
+        })
     end
 
     local mainFrame, mainStroke = createCircleFrame({
@@ -139,6 +144,8 @@ function DrawApi:DrawCircle(properties)
     DrawingCircle.MainStroke = mainStroke
     DrawingCircle.BorderFrame = borderFrame
     DrawingCircle.BorderStroke = borderStroke
+    DrawingCircle.BorderFrame2 = borderFrame2
+    DrawingCircle.BorderStroke2 = borderStroke2
     DrawingCircle.Properties = CircleDrawing
 
     function DrawingCircle:UpdateProperties(properties)
@@ -259,6 +266,12 @@ function DrawApi:DrawSquare(properties)
             StrokeColor = Color3.fromRGB(0, 0, 0),
             Transparency = SquareDrawing.transparency
         })
+        --
+        borderFrame2, borderStroke2 = createSquareFrame({
+            ExtraPixels = -1,
+            StrokeColor = Color3.fromRGB(0, 0, 0),
+            Transparency = SquareDrawing.transparency
+        })
     end
 
     local mainFrame, mainStroke = createSquareFrame({
@@ -271,6 +284,8 @@ function DrawApi:DrawSquare(properties)
     DrawingSquare.MainStroke = mainStroke
     DrawingSquare.BorderFrame = borderFrame
     DrawingSquare.BorderStroke = borderStroke
+    DrawingSquare.BorderFrame2 = borderFrame2
+    DrawingSquare.BorderStroke2 = borderStroke2
     DrawingSquare.Properties = SquareDrawing
 
     function DrawingSquare:UpdateProperties(properties)
