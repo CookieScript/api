@@ -277,7 +277,7 @@ function DrawApi:DrawSquare(properties)
         local stroke
         if option.StrokeColor then
             stroke = Instance.new("UIStroke")
-            stroke.Thickness = 1
+            stroke.Thickness = 2
             stroke.Color = option.StrokeColor
             stroke.Transparency = option.Transparency or 0
             stroke.Parent = frame
