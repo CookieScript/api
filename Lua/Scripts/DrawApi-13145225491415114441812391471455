@@ -277,7 +277,7 @@ function DrawApi:DrawSquare(properties)
         local stroke
         if option.StrokeColor then
             stroke = Instance.new("UIStroke")
-            stroke.Thickness = 2
+            stroke.Thickness = 1
             stroke.Color = option.StrokeColor
             stroke.Transparency = option.Transparency or 0
             stroke.Parent = frame
@@ -289,12 +289,12 @@ function DrawApi:DrawSquare(properties)
     local borderFrame, borderStroke, borderFrame2, borderStroke2
     if SquareDrawing.border then
         borderFrame, borderStroke = createSquareFrame({
-            ExtraPixels = 1,
+            ExtraPixels = 2,
             StrokeColor = Color3.fromRGB(0, 0, 0),
             Transparency = SquareDrawing.transparency
         })
         borderFrame2, borderStroke2 = createSquareFrame({
-            ExtraPixels = -1,
+            ExtraPixels = -2,
             StrokeColor = Color3.fromRGB(0, 0, 0),
             Transparency = SquareDrawing.transparency
         })
