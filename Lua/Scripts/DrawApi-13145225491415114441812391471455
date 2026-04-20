@@ -289,12 +289,12 @@ function DrawApi:DrawSquare(properties)
     local borderFrame, borderStroke, borderFrame2, borderStroke2
     if SquareDrawing.border then
         borderFrame, borderStroke = createSquareFrame({
-            ExtraPixels = 2,
+            ExtraPixels = 1,
             StrokeColor = Color3.fromRGB(0, 0, 0),
             Transparency = SquareDrawing.transparency
         })
         borderFrame2, borderStroke2 = createSquareFrame({
-            ExtraPixels = -2,
+            ExtraPixels = -1,
             StrokeColor = Color3.fromRGB(0, 0, 0),
             Transparency = SquareDrawing.transparency
         })
