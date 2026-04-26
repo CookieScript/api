@@ -1,0 +1,37 @@
+local api = {}
+
+function api:Getfont(prop)
+	local props = {
+		link = prop.link or prop.Link or prop.url or prop.Url or prop.https or prop.Https,
+		name = prop.name or prop.Name or prop.names or prop.Names or "main.tff",
+		folder = prop.folder or prop.Folder or prop.folders or prop.Folders or "dino/fonts",
+		secname = prop.secname or prop.SecName or prop.secondname or prop.SecondName,
+		mainname = prop.mainname or prop.MainName or prop.mainnames or prop.Mainnames or "Regular",
+		weight = prop.weight or prop.Weight or prop.weights or prop.Weights or 400,
+		style = prop.style or prop.Style or prop.styles or prop.Styles or "normal"
+	}
+
+	local path = props.folder .. "/" .. props.name
+	local data = game:HttpGet(props.link)
+
+	writefile(path, data)
+
+	local decoded = {
+		name = props.secname or props.mainname,
+		faces = {
+			{
+				name = "Regular",
+				weight = props.weight,
+				style = props.style,
+				assetId = getcustomasset(path)
+			}
+		}
+	}
+
+	local jsonPath = props.folder .. "/" .. "font.json"
+	writefile(jsonPath, game:GetService("HttpService"):JSONEncode(decoded))
+
+	return Font.new(getcustomasset(path), Enum.FontWeight.Regular)
+end
+
+return api
