@@ -1,5 +1,5 @@
 local api = {};
-
+--
 local function xor(str, key)
     local res = {}
     for i = 1, #str do
@@ -7,19 +7,19 @@ local function xor(str, key)
     end
     return table.concat(res)
 end
-
+--
 local function toHex(str)
     return (str:gsub(".", function(c)
         return string.format("%02x", c:byte())
     end))
 end
-
+--
 local function fromHex(str)
     return (str:gsub("..", function(cc)
         return string.char(tonumber(cc, 16))
     end))
 end
-
+--
 local function toAscii(str)
     local t = {}
     for i = 1, #str do
@@ -27,7 +27,7 @@ local function toAscii(str)
     end
     return table.concat(t, ",")
 end
-
+--
 local function fromAscii(str)
     local t = {}
     for n in string.gmatch(str, "%d+") do
@@ -35,7 +35,7 @@ local function fromAscii(str)
     end
     return table.concat(t)
 end
-
+--
 local function base64Encode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     return ((data:gsub('.', function(x)
@@ -49,7 +49,7 @@ local function base64Encode(data)
         return b:sub(c+1,c+1)
     end)..({ '', '==', '=' })[#data%3+1])
 end
-
+--
 local function base64Decode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     data = data:gsub('[^'..b..'=]', '')
@@ -64,7 +64,7 @@ local function base64Decode(data)
         return string.char(c)
     end))
 end
-
+--
 function api:encrpt(data)
     return {
         ascii = toAscii(data),
@@ -73,7 +73,7 @@ function api:encrpt(data)
         base64 = base64Encode(data)
     }
 end
-
+--
 function api:decrypt(data)
     if data.xor then
         return xor(data.xor, 17)
@@ -85,5 +85,6 @@ function api:decrypt(data)
         return fromAscii(data.ascii)
     end
 end
-
+--
 return api --```
+--```
