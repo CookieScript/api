@@ -97,8 +97,11 @@ function DrawApi:DrawThreeDLine(From, To, mainColor, transparency, border)
         self.WorldTo = newTo or self.WorldTo
     end
 
+    local RunService = game:GetService("RunService")
+    local GuiInset = game:GetService("GuiService"):GetGuiInset()
+
     local Connection
-    Connection = game:GetService("RunService").Heartbeat:Connect(function()
+    Connection = RunService.Heartbeat:Connect(function()
         if not Line.Frame then
             Connection:Disconnect()
             return
@@ -112,8 +115,8 @@ function DrawApi:DrawThreeDLine(From, To, mainColor, transparency, border)
         if fromVisible and toVisible then
             OldMove(
                 Line,
-                Vector2.new(fromPos.X, fromPos.Y),
-                Vector2.new(toPos.X, toPos.Y)
+                Vector2.new(fromPos.X, fromPos.Y - GuiInset.Y),
+                Vector2.new(toPos.X, toPos.Y - GuiInset.Y)
             )
         end
     end)
