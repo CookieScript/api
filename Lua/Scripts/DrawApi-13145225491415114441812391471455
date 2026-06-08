@@ -1,5 +1,9 @@
 local DrawApi = {}
 
+-- // Made by dino and rinox bot
+-- Dino 20%
+-- RinoX bot 80%
+
 function DrawApi:DrawLine(from, to, mainColor, transparency, border)
     local ApiGui = Instance.new("ScreenGui")
     ApiGui.Parent = game:GetService("CoreGui")
@@ -72,6 +76,60 @@ function DrawApi:DrawLine(from, to, mainColor, transparency, border)
     end
 
     return DrawingLine
+end
+
+function DrawApi:DrawThreeDLine(From, To, mainColor, transparency, border)
+    local Line = DrawApi:DrawLine(
+        Vector2.new(0, 0),
+        Vector2.new(0, 0),
+        mainColor,
+        transparency,
+        border
+    )
+
+    Line.WorldFrom = From or Vector3.new(0, 0, 0)
+    Line.WorldTo = To or Vector3.new(0, 1, 0)
+
+    local OldMove = Line.Move
+
+    function Line:Move(newFrom, newTo)
+        self.WorldFrom = newFrom or self.WorldFrom
+        self.WorldTo = newTo or self.WorldTo
+    end
+
+    local Connection
+    Connection = game:GetService("RunService").Heartbeat:Connect(function()
+        if not Line.Frame then
+            Connection:Disconnect()
+            return
+        end
+
+        local fromPos, fromVisible = workspace.CurrentCamera:WorldToViewportPoint(Line.WorldFrom)
+        local toPos, toVisible = workspace.CurrentCamera:WorldToViewportPoint(Line.WorldTo)
+
+        Line.Frame.Visible = fromVisible and toVisible
+
+        if fromVisible and toVisible then
+            OldMove(
+                Line,
+                Vector2.new(fromPos.X, fromPos.Y),
+                Vector2.new(toPos.X, toPos.Y)
+            )
+        end
+    end)
+
+    local OldDelete = Line.DeleteLine
+
+    function Line:DeleteLine()
+        if Connection then
+            Connection:Disconnect()
+            Connection = nil
+        end
+
+        OldDelete(self)
+    end
+
+    return Line
 end
 
 function DrawApi:DrawCircle(properties)
