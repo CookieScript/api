@@ -115,7 +115,7 @@ function DrawApi:DrawThickCircle(properties)
         corner.Parent = frame
 
         local stroke = Instance.new("UIStroke")
-        stroke.Thickness = 2
+        stroke.Thickness = 1
         stroke.Color = CircleDrawing.color
         stroke.Parent = frame
 
