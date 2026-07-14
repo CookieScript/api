@@ -90,7 +90,7 @@ function Api:DrawSquare(prop)
 		Parent = Frame,
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
-		Size = UDim2.fromOffset(Square.To.X - Square.From.X + 1, Square.To.Y - Square.From.Y + 1),
+		Size = UDim2.fromOffset(Square.To.X - Square.From.X, Square.To.Y - Square.From.Y),
 		Position = UDim2.fromOffset(-1, -1)
 	})
     --
@@ -111,7 +111,7 @@ function Api:DrawSquare(prop)
 		Frame.Size = UDim2.fromOffset(Square.To.X - Square.From.X - 2, Square.To.Y - Square.From.Y - 2)
 		Frame.Position = UDim2.fromOffset(Square.From.X + 1, Square.From.Y + 1)
         --
-        InnerFrame.Size = UDim2.fromOffset(Square.To.X - Square.From.X + 1, Square.To.Y - Square.From.Y + 1)
+        InnerFrame.Size = UDim2.fromOffset(Square.To.X - Square.From.X, Square.To.Y - Square.From.Y)
 	    InnerFrame.Position = UDim2.fromOffset(-1, -1)
         --
 		Stroke.Transparency = Square.Transparency
