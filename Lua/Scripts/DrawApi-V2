@@ -1,0 +1,127 @@
+local Api = {}
+--
+function Api:Create(ins, prop)
+	local Instance = Instance.new(ins)
+
+	for i, v in next, prop do
+		Instance[i] = v
+	end
+
+	return Instance
+end
+--
+local ScreenGui = Api:Create("ScreenGui", {
+	Parent = game:GetService("CoreGui")
+})
+--
+function Api:DrawLine(prop)
+	local Line = {
+		From = prop.from or prop.From or prop.Start or Vector2.new(0, 0),
+		To = prop.to or prop.To or prop.End or Vector2.new(0, 0),
+		Color = prop.color or prop.Color or Color3.fromRGB(255, 255, 255),
+		Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or 0,
+	}
+    --
+	local Frame = self:Create("Frame", {
+		Parent = ScreenGui,
+		BackgroundColor3 = Line.Color,
+		BackgroundTransparency = Line.Transparency,
+		BorderSizePixel = 0,
+		Size = UDim2.fromOffset((Line.To - Line.From).Magnitude, 1),
+		Position = UDim2.fromOffset(Line.From.X, Line.From.Y),
+		Rotation = math.deg(math.atan2(Line.To.Y - Line.From.Y, Line.To.X - Line.From.X))
+	})
+    --
+	local Stroke = self:Create("UIStroke", {
+		Parent = Frame,
+		Thickness = 1,
+		LineJoinMode = Enum.LineJoinMode.Miter,
+		Transparency = Line.Transparency
+	})
+    --
+	function Line:UpdateProperties(prop)
+		Line.From = prop.from or prop.From or prop.Start or Line.From
+		Line.To = prop.to or prop.To or prop.End or Line.To
+		Line.Color = prop.color or prop.Color or Line.Color
+		Line.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Line.Transparency
+    --
+		Frame.BackgroundColor3 = Line.Color
+		Frame.BackgroundTransparency = Line.Transparency
+		Stroke.Transparency = Line.Transparency
+		Frame.Size = UDim2.fromOffset((Line.To - Line.From).Magnitude, 1)
+		Frame.Position = UDim2.fromOffset(Line.From.X, Line.From.Y)
+		Frame.Rotation = math.deg(math.atan2(Line.To.Y - Line.From.Y, Line.To.X - Line.From.X))
+	end
+    --
+	function Line:DeleteLine()
+		Frame:Destroy()
+	end
+    --
+	Line.Line = Frame
+    --
+	return Line
+end
+
+function Api:DrawSquare(prop)
+	local Square = {
+		From = prop.from or prop.From or prop.Start or Vector2.new(0, 0),
+		To = prop.to or prop.To or prop.End or Vector2.new(0, 0),
+		Color = prop.color or prop.Color or Color3.fromRGB(255, 255, 255),
+		Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or 0,
+	}
+    --
+	local Frame = self:Create("Frame", {
+		Parent = ScreenGui,
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		Size = UDim2.fromOffset(Square.To.X - Square.From.X - 2, Square.To.Y - Square.From.Y - 2),
+		Position = UDim2.fromOffset(Square.From.X + 1, Square.From.Y + 1)
+	})
+   --
+	local Stroke = self:Create("UIStroke", {
+		Parent = Frame,
+		Thickness = 3,
+		LineJoinMode = Enum.LineJoinMode.Miter,
+		Transparency = Square.Transparency
+	})
+    --
+	local InnerFrame = self:Create("Frame", {
+		Name = "InnerFrame",
+		Parent = Frame,
+		BackgroundTransparency = 1,
+		BorderSizePixel = 0,
+		Size = UDim2.fromOffset(Square.To.X - Square.From.X + 1, Square.To.Y - Square.From.Y + 1),
+		Position = UDim2.fromOffset(-1, -1)
+	})
+    --
+	local InnerStroke = self:Create("UIStroke", {
+		Parent = InnerFrame,
+		Color = Square.Color,
+		Thickness = 1,
+		LineJoinMode = Enum.LineJoinMode.Miter,
+		Transparency = Square.Transparency
+	})
+    --
+	function Square:UpdateProperties(prop)
+		Square.From = prop.from or prop.From or prop.Start or Square.From
+		Square.To = prop.to or prop.To or prop.End or Square.To
+		Square.Color = prop.color or prop.Color or Square.Color
+		Square.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Square.Transparency
+
+		Frame.Size = UDim2.fromOffset(Square.To.X - Square.From.X - 2, Square.To.Y - Square.From.Y - 2)
+		Frame.Position = UDim2.fromOffset(Square.From.X + 1, Square.From.Y + 1)
+		Stroke.Transparency = Square.Transparency
+		InnerStroke.Color = Square.Color
+		InnerStroke.Transparency = Square.Transparency
+	end
+    --
+	function Square:DeleteSquare()
+		Frame:Destroy()
+	end
+    --
+	Square.Square = InnerStroke
+    --
+	return Square
+end
+--
+return Api
