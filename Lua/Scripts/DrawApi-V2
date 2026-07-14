@@ -20,16 +20,14 @@ function Api:DrawLine(prop)
 		To = prop.to or prop.To or prop.End or Vector2.new(0, 0),
 		Color = prop.color or prop.Color or Color3.fromRGB(255, 255, 255),
 		Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or 0,
-		Visible = prop.visible ~= nil and prop.visible or prop.Visible ~= nil and prop.Visible or true,
 	}
     --
 	local Frame = self:Create("Frame", {
 		Parent = ScreenGui,
-		Visible = Line.Visible,
 		BackgroundColor3 = Line.Color,
 		BackgroundTransparency = Line.Transparency,
 		BorderSizePixel = 0,
-		AnchorPoint = Vector2.new(0.5, 0.5),
+        AnchorPoint = Vector2.new(0.5, 0.5),
 		Size = UDim2.fromOffset((Line.To - Line.From).Magnitude, 1),
 		Position = UDim2.fromOffset((Line.From.X + Line.To.X) / 2, (Line.From.Y + Line.To.Y) / 2),
 		Rotation = math.deg(math.atan2(Line.To.Y - Line.From.Y, Line.To.X - Line.From.X))
@@ -47,9 +45,7 @@ function Api:DrawLine(prop)
 		Line.To = prop.to or prop.To or prop.End or Line.To
 		Line.Color = prop.color or prop.Color or Line.Color
 		Line.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Line.Transparency
-		Line.Visible = prop.visible ~= nil and prop.visible or prop.Visible ~= nil and prop.Visible or true
         --
-		Frame.Visible = Line.Visible
 		Frame.BackgroundColor3 = Line.Color
 		Frame.BackgroundTransparency = Line.Transparency
 		Stroke.Transparency = Line.Transparency
@@ -73,12 +69,10 @@ function Api:DrawSquare(prop)
 		To = prop.to or prop.To or prop.End or Vector2.new(0, 0),
 		Color = prop.color or prop.Color or Color3.fromRGB(255, 255, 255),
 		Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or 0,
-		Visible = prop.visible ~= nil and prop.visible or prop.Visible ~= nil and prop.Visible or true,
 	}
     --
 	local Frame = self:Create("Frame", {
 		Parent = ScreenGui,
-		Visible = Square.Visible,
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		Size = UDim2.fromOffset(Square.To.X - Square.From.X - 2, Square.To.Y - Square.From.Y - 2),
@@ -94,7 +88,6 @@ function Api:DrawSquare(prop)
     --
 	local InnerFrame = self:Create("Frame", {
 		Name = "InnerFrame",
-        Visible = Square.Visible,
 		Parent = Frame,
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
@@ -115,15 +108,12 @@ function Api:DrawSquare(prop)
 		Square.To = prop.to or prop.To or prop.End or Square.To
 		Square.Color = prop.color or prop.Color or Square.Color
 		Square.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Square.Transparency
-		Square.Visible = prop.visible ~= nil and prop.visible or prop.Visible ~= nil and prop.Visible or true
         --
-		Frame.Visible = Square.Visible
 		Frame.Size = UDim2.fromOffset(Square.To.X - Square.From.X - 2, Square.To.Y - Square.From.Y - 2)
-		Frame.Position = UDim2.fromOffset(Square.From.X + 1, Square.From.X + 1)
+		Frame.Position = UDim2.fromOffset(Square.From.X + 1, Square.From.Y + 1)
         --
-        InnerFrame.Visible = Square.Visible
-		InnerFrame.Size = UDim2.fromOffset(Square.To.X - Square.From.X, Square.To.Y - Square.From.Y)
-		InnerFrame.Position = UDim2.fromOffset(-1, -1)
+        InnerFrame.Size = UDim2.fromOffset(Square.To.X - Square.From.X, Square.To.Y - Square.From.Y)
+	    InnerFrame.Position = UDim2.fromOffset(-1, -1)
         --
 		Stroke.Transparency = Square.Transparency
 		InnerStroke.Color = Square.Color
