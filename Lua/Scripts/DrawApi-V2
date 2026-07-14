@@ -44,7 +44,7 @@ function Api:DrawLine(prop)
 		Line.To = prop.to or prop.To or prop.End or Line.To
 		Line.Color = prop.color or prop.Color or Line.Color
 		Line.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Line.Transparency
-    --
+        --
 		Frame.BackgroundColor3 = Line.Color
 		Frame.BackgroundTransparency = Line.Transparency
 		Stroke.Transparency = Line.Transparency
@@ -61,7 +61,7 @@ function Api:DrawLine(prop)
     --
 	return Line
 end
-
+--
 function Api:DrawSquare(prop)
 	local Square = {
 		From = prop.from or prop.From or prop.Start or Vector2.new(0, 0),
@@ -77,7 +77,7 @@ function Api:DrawSquare(prop)
 		Size = UDim2.fromOffset(Square.To.X - Square.From.X - 2, Square.To.Y - Square.From.Y - 2),
 		Position = UDim2.fromOffset(Square.From.X + 1, Square.From.Y + 1)
 	})
-   --
+    --
 	local Stroke = self:Create("UIStroke", {
 		Parent = Frame,
 		Thickness = 3,
@@ -107,7 +107,7 @@ function Api:DrawSquare(prop)
 		Square.To = prop.to or prop.To or prop.End or Square.To
 		Square.Color = prop.color or prop.Color or Square.Color
 		Square.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Square.Transparency
-
+        --
 		Frame.Size = UDim2.fromOffset(Square.To.X - Square.From.X - 2, Square.To.Y - Square.From.Y - 2)
 		Frame.Position = UDim2.fromOffset(Square.From.X + 1, Square.From.Y + 1)
 		Stroke.Transparency = Square.Transparency
