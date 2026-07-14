@@ -1,0 +1,32 @@
+local HttpService = game:GetService("HttpService")
+--
+local Api = {}
+--
+function Api:FontsRegister(Name, Weight, Style, Asset)
+	if not isfile(Asset.Id) then
+		writefile(Asset.Id, Asset.Font)
+	end
+	--
+	if isfile(Name .. ".font") then
+		--
+		delfile(Name .. ".font")
+	end
+	--
+	local Info = {
+		name = Name,
+		faces = {
+			{
+				name = "Normal",
+				weight = Weight,
+				style = Style,
+				assetId = getcustomasset(Asset.Id),
+			},
+		},
+	}
+	--
+	writefile(Name .. ".font", HttpService:JSONEncode(Info))
+	--
+	return Font.new(getcustomasset(Name .. ".font"))
+end
+--
+return Api
