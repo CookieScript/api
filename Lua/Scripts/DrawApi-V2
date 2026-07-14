@@ -20,7 +20,7 @@ function Api:DrawLine(prop)
 		To = prop.to or prop.To or prop.End or Vector2.new(0, 0),
 		Color = prop.color or prop.Color or Color3.fromRGB(255, 255, 255),
 		Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or 0,
-		Visible = prop.visible or prop.Visible or true,
+		Visible = prop.visible ~= nil and prop.visible or prop.Visible ~= nil and prop.Visible or true,
 	}
     --
 	local Frame = self:Create("Frame", {
@@ -47,7 +47,7 @@ function Api:DrawLine(prop)
 		Line.To = prop.to or prop.To or prop.End or Line.To
 		Line.Color = prop.color or prop.Color or Line.Color
 		Line.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Line.Transparency
-		Line.Visible = prop.visible or prop.Visible or Line.Visible
+		Line.Visible = prop.visible ~= nil and prop.visible or prop.Visible ~= nil and prop.Visible or true
         --
 		Frame.Visible = Line.Visible
 		Frame.BackgroundColor3 = Line.Color
@@ -73,7 +73,7 @@ function Api:DrawSquare(prop)
 		To = prop.to or prop.To or prop.End or Vector2.new(0, 0),
 		Color = prop.color or prop.Color or Color3.fromRGB(255, 255, 255),
 		Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or 0,
-		Visible = prop.visible or prop.Visible or true,
+		Visible = prop.visible ~= nil and prop.visible or prop.Visible ~= nil and prop.Visible or true,
 	}
     --
 	local Frame = self:Create("Frame", {
@@ -115,7 +115,7 @@ function Api:DrawSquare(prop)
 		Square.To = prop.to or prop.To or prop.End or Square.To
 		Square.Color = prop.color or prop.Color or Square.Color
 		Square.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Square.Transparency
-		Square.Visible = prop.visible or prop.Visible or Square.Visible
+		Square.Visible = prop.visible ~= nil and prop.visible or prop.Visible ~= nil and prop.Visible or true
         --
 		Frame.Visible = Square.Visible
 		Frame.Size = UDim2.fromOffset(Square.To.X - Square.From.X - 2, Square.To.Y - Square.From.Y - 2)
