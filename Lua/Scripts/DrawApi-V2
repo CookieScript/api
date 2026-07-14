@@ -27,8 +27,9 @@ function Api:DrawLine(prop)
 		BackgroundColor3 = Line.Color,
 		BackgroundTransparency = Line.Transparency,
 		BorderSizePixel = 0,
+        AnchorPoint = Vector2.new(0.5, 0.5),
 		Size = UDim2.fromOffset((Line.To - Line.From).Magnitude, 1),
-		Position = UDim2.fromOffset(Line.From.X, Line.From.Y),
+		Position = UDim2.fromOffset((Line.From.X + Line.To.X) / 2, (Line.From.Y + Line.To.Y) / 2),
 		Rotation = math.deg(math.atan2(Line.To.Y - Line.From.Y, Line.To.X - Line.From.X))
 	})
     --
@@ -49,7 +50,7 @@ function Api:DrawLine(prop)
 		Frame.BackgroundTransparency = Line.Transparency
 		Stroke.Transparency = Line.Transparency
 		Frame.Size = UDim2.fromOffset((Line.To - Line.From).Magnitude, 1)
-		Frame.Position = UDim2.fromOffset(Line.From.X, Line.From.Y)
+		Frame.Position = UDim2.fromOffset((Line.From.X + Line.To.X) / 2, (Line.From.Y + Line.To.Y) / 2)
 		Frame.Rotation = math.deg(math.atan2(Line.To.Y - Line.From.Y, Line.To.X - Line.From.X))
 	end
     --
