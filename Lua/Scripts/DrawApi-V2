@@ -22,6 +22,8 @@ function Api:API_ADD_TASK(con)
 end
 --
 local RunService = game:GetService("RunService")
+local GuiService = game:GetService("GuiService")
+local gui_inset = GuiService:GetGuiInset()
 --
 local ScreenGui = Api:Create("ScreenGui", {
 	Parent = game:GetService("CoreGui")
@@ -183,8 +185,8 @@ function Api:Draw3DLine(prop)
 		local To, ToVisible = Camera:WorldToViewportPoint(Line.To)
 
 		if FromVisible or ToVisible then
-			local FromPos = Vector2.new(From.X, From.Y)
-			local ToPos = Vector2.new(To.X, To.Y)
+			local FromPos = Vector2.new(From.X, From.Y - gui_inset.Y)
+			local ToPos = Vector2.new(To.X, To.Y - gui_inset.Y)
 
 			Frame.Size = UDim2.fromOffset((ToPos - FromPos).Magnitude, 1)
 			Frame.Position = UDim2.fromOffset((FromPos.X + ToPos.X) / 2, (FromPos.Y + ToPos.Y) / 2)
