@@ -10,10 +10,23 @@ function Api:Create(ins, prop)
 	return Instance
 end
 --
+function Api:API_ADD_TASK(con)
+	local Last = 0
+
+	return function(...)
+		if os.clock() - Last >= 1 / 60 then
+			Last = os.clock()
+			con(...)
+		end
+	end
+end
+--
+local RunService = game:GetService("RunService")
+--
 local ScreenGui = Api:Create("ScreenGui", {
 	Parent = game:GetService("CoreGui")
 })
---
+-- // 2D
 function Api:DrawLine(prop)
 	local Line = {
 		From = prop.from or prop.From or prop.Start or Vector2.new(0, 0),
@@ -127,6 +140,72 @@ function Api:DrawSquare(prop)
 	Square.Square = InnerStroke
     --
 	return Square
+end
+-- // 3D
+function Api:Draw3DLine(prop)
+	local Line = {
+		From = prop.from or prop.From or prop.Start or Vector3.new(0, 0, 0),
+		To = prop.to or prop.To or prop.End or Vector3.new(0, 0, 0),
+		Color = prop.color or prop.Color or Color3.fromRGB(255, 255, 255),
+		Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or 0,
+	}
+	--
+	local Frame = self:Create("Frame", {
+		Parent = ScreenGui,
+		BackgroundColor3 = Line.Color,
+		BackgroundTransparency = Line.Transparency,
+		BorderSizePixel = 0,
+		AnchorPoint = Vector2.new(0.5, 0.5),
+		Size = UDim2.fromOffset(0, 1)
+	})
+	--
+	local Stroke = self:Create("UIStroke", {
+		Parent = Frame,
+		Thickness = 1,
+		LineJoinMode = Enum.LineJoinMode.Miter,
+		Transparency = Line.Transparency
+	})
+	--
+	function Line:UpdateProperties(prop)
+		Line.From = prop.from or prop.From or prop.Start or Line.From
+		Line.To = prop.to or prop.To or prop.End or Line.To
+		Line.Color = prop.color or prop.Color or Line.Color
+		Line.Transparency = prop.transparency or prop.Transparency or prop.trans or prop.Trans or Line.Transparency
+		--
+		Frame.BackgroundColor3 = Line.Color
+		Frame.BackgroundTransparency = Line.Transparency
+		Stroke.Transparency = Line.Transparency
+	end
+	--
+	function Line:Update()
+		local Camera = workspace.CurrentCamera
+		local From, FromVisible = Camera:WorldToViewportPoint(Line.From)
+		local To, ToVisible = Camera:WorldToViewportPoint(Line.To)
+
+		if FromVisible or ToVisible then
+			local FromPos = Vector2.new(From.X, From.Y)
+			local ToPos = Vector2.new(To.X, To.Y)
+
+			Frame.Size = UDim2.fromOffset((ToPos - FromPos).Magnitude, 1)
+			Frame.Position = UDim2.fromOffset((FromPos.X + ToPos.X) / 2, (FromPos.Y + ToPos.Y) / 2)
+			Frame.Rotation = math.deg(math.atan2(ToPos.Y - FromPos.Y, ToPos.X - FromPos.X))
+			Frame.Visible = true
+		else
+			Frame.Visible = false
+		end
+	end
+	--
+	function Line:DeleteLine()
+		Frame:Destroy()
+	end
+	--
+    RunService.Heartbeat:Connect(Api:API_ADD_TASK(function()
+        Line:Update()
+    end))
+    --
+	Line.Line = Frame
+	--
+	return Line
 end
 --
 return Api
