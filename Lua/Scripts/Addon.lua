@@ -28,12 +28,12 @@ function Api:GetFile(link, ...)
     end)
 
     if not S then
-        for _, Value in next, args do
-            if typeof(Value) == "boolean" and Value then
-                return "Failed"
-            end
-        end
-        return nil
+        return args[1] and "Failed"
+    end
+
+    if args[2] then
+        writefile(args[2], R)
+        return readfile(args[2])
     end
 
     return R
