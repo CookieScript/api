@@ -33,7 +33,7 @@ function Api:GetFile(link, ...)
 
     if args[2] then
         writefile(args[2], R)
-        return readfile(args[2])
+        return getcustomasset(args[2])
     end
 
     return R
