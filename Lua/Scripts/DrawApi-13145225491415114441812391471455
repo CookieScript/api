@@ -1,9 +1,5 @@
 local DrawApi = {}
-
--- // Made by dino and rinox bot
--- Dino 20%
--- RinoX bot 80%
-
+-- // rinox is larping btw
 function DrawApi:DrawLine(from, to, mainColor, transparency, border)
     local ApiGui = Instance.new("ScreenGui")
     ApiGui.Parent = game:GetService("CoreGui")
