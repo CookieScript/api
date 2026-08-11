@@ -1,5 +1,5 @@
 local DrawApi = {}
--- // rinox is larping btw
+-- // who made this broi
 function DrawApi:DrawLine(from, to, mainColor, transparency, border)
     local ApiGui = Instance.new("ScreenGui")
     ApiGui.Parent = game:GetService("CoreGui")
